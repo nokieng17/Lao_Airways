@@ -1,0 +1,42 @@
+<resources>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_currency">Currency</string>
+
+    <string name="KEY_CURRENCY">set_currency</string>
+    <string name="pref_title_set_currency">Your Currency</string>
+    <string-array name="pref_set_currency_titles">
+        <item>US Dollar (USD)</item>
+        <item>Euro (EUR)</item>
+        <item>Chinese Yuan (CNY)</item>
+        <item>Thai Bath (THB)</item>
+        <item>Laos Kip (LAK)</item>
+    </string-array>
+    <string-array name="pref_set_currency_values">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>CNY</item>
+        <item>THB</item>
+        <item>LAK</item>
+    </string-array>
+
+
+    <string name="KEY_KEEP_HISTORY">key_pref_keep_history</string>
+
+    <string-array name="pref_keep_history_duration_titles">
+        <item>1 Day</item>
+        <item>5 Days</item>
+        <item>10 Days</item>
+        <item>15 Days</item>
+        <item>30 Days</item>
+    </string-array>
+    <string-array name="pref_keep_history_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+    </string-array>
+
+</resources>

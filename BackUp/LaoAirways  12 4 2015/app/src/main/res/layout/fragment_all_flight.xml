@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="nokieng.gdgvientiane.org.laoair.AllFlightActivity.fragmentAllFlight">
+
+    <include
+        android:id="@+id/toolbar_all_flight"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize" />
+
+
+    <LinearLayout
+        android:id="@+id/layout_all_flight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_shape_white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_all_flight_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp10"
+            android:background="@drawable/shape_line"
+            android:gravity="center"
+            android:textColor="@color/accent"
+            android:visibility="gone" />
+
+        <ListView
+            android:id="@+id/lv_all_flight"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/activity_vertical_margin"
+            android:scrollbars="none" />
+
+    </LinearLayout>
+
+
+    <ProgressBar
+        android:id="@+id/pb_all_flight"
+        style="@style/Base.Widget.AppCompat.ProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminateOnly="true"
+        android:indeterminateTintMode="src_over"
+        android:progressBackgroundTintMode="src_over"
+        android:progressTintMode="src_over"
+        android:visibility="gone" />
+
+</LinearLayout>
