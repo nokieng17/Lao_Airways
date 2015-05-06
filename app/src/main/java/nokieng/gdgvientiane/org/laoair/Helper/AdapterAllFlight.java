@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class AdapterAllFlight extends ArrayAdapter<HashMap<String, String>> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View rootView = convertView;
-        ViewHolder viewHolder = null;
+        ViewHolder viewHolder;
 
         //technique recycle view
         if (rootView == null) {
@@ -61,6 +62,7 @@ public class AdapterAllFlight extends ArrayAdapter<HashMap<String, String>> {
             viewHolder.txtPrice = (TextView) rootView.findViewById(R.id.txt_all_flight_price);
             viewHolder.txtDepart = (TextView) rootView.findViewById(R.id.txt_all_flight_depart_arrive);
             viewHolder.txtLeaveReturn = (TextView) rootView.findViewById(R.id.txt_all_flight_leave_return);
+            viewHolder.imvLogo = (ImageView) rootView.findViewById(R.id.imv_all_flight);
 
 
             rootView.setTag(viewHolder);
@@ -74,6 +76,7 @@ public class AdapterAllFlight extends ArrayAdapter<HashMap<String, String>> {
             viewHolder.txtDepart.setText("Depart: " + listAllItem.get(position).get(KEY_DEPART) + " (" + strLeaveFrom + ")      " +
                     "Arrive: " + listAllItem.get(position).get(KEY_ARRIVE) + " (" + strGoTo + ")");
             viewHolder.txtLeaveReturn.setText(listAllItem.get(position).get(KEY_LEAVE_RETURN) + " Flight");
+            viewHolder.imvLogo.setImageDrawable(getActivity.getResources().getDrawable(R.drawable.ic_plane));
         }
 
         return rootView;
@@ -81,6 +84,7 @@ public class AdapterAllFlight extends ArrayAdapter<HashMap<String, String>> {
 
     private class ViewHolder {
         private TextView txtFlightNo, txtClass, txtPrice, txtDepart, txtLeaveReturn;
+        private ImageView imvLogo;
     }
 
     @Override

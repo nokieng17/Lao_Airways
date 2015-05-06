@@ -2,7 +2,6 @@ package nokieng.gdgvientiane.org.laoair;
 
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -45,7 +44,7 @@ import nokieng.gdgvientiane.org.laoair.Helper.Utilities;
 public class FragmentDomestic extends Fragment {
 
     private static final String TAG = FragmentDomestic.class.getSimpleName();
-    private static final String TAG_USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36";
+//    private static final String TAG_USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36";
 
     public static final String[] LEAVE_FROM = new String[]{"-- Leaving From --",
             "Luang Namtha (LXG)",
@@ -71,7 +70,7 @@ public class FragmentDomestic extends Fragment {
     public static final String KEY_FULL_NAME_LEAVE = "FullNameLeave";
     public static final String KEY_FULL_NAME_GO_TO = "FullNameGoTo";
 
-    private int expireDate = 3 * 24 * 60 * 60 * 1000;
+//    private int expireDate = 3 * 24 * 60 * 60 * 1000;
 
 
     public static final String VALUE_GET_DESTINATION_LOCAL = "GetDestLocal";
@@ -94,16 +93,16 @@ public class FragmentDomestic extends Fragment {
     private LinearLayout layoutDateTo;
 
     private String strDesCode = "";
-    private String strSuccess = "";
+//    private String strSuccess = "";
     private String strRoundType = "";
     private String strLeaveFrom = "";
     private String strGoTo = "";
     private String strDepartureDate = "";
     private String strReturnDate = "";
     private String strClassType = "";
-    private String strAdults = "";
-    private String strChild = "";
-    private String strInfants = "";
+//    private String strAdults = "";
+//    private String strChild = "";
+//    private String strInfants = "";
 
     private int intYears;
     private int intMonth;
@@ -118,12 +117,12 @@ public class FragmentDomestic extends Fragment {
     private HashMap<String, String> mMapSpnGoTo = new HashMap<>();
     private ArrayList<String> mListSpnGoTo = new ArrayList<>();
 
-    private Context dialogContext = null;
+//    private Context dialogContext = null;
     private boolean isRestore = false;
 
-    public FragmentDomestic() {
-        dialogContext = getActivity();
-    }
+//    public FragmentDomestic() {
+//        dialogContext = getActivity();
+//    }
 
 
     @Override
@@ -153,19 +152,19 @@ public class FragmentDomestic extends Fragment {
         btnSearch = (Button) rootView.findViewById(R.id.btn_domestic_search);
 
         //set all adapter
-        adapterLeaveFrom = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+        adapterLeaveFrom = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.text_view1, LEAVE_FROM);
         spnLeaveFrom.setAdapter(adapterLeaveFrom);
 
-        adapterAdults = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+        adapterAdults = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.text_view1, ADULTS);
         spnAdults.setAdapter(adapterAdults);
 
-        adapterChildren = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+        adapterChildren = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.text_view1, CHILDREN);
         spnChild.setAdapter(adapterChildren);
 
-        adapterInfant = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+        adapterInfant = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.text_view1, INFANT);
         spnInfant.setAdapter(adapterInfant);
 
@@ -178,7 +177,7 @@ public class FragmentDomestic extends Fragment {
                 mMapSpnGoTo.clear();
                 mListSpnGoTo.clear();
 
-                adapterGoTo = new ArrayAdapter<String>(getActivity().getApplicationContext()
+                adapterGoTo = new ArrayAdapter<>(getActivity().getApplicationContext()
                         , R.layout.text_view1, GOING_TO);
                 spnGoTo.setAdapter(adapterGoTo);
                 adapterGoTo.notifyDataSetChanged();
@@ -243,6 +242,14 @@ public class FragmentDomestic extends Fragment {
             }
         });
 
+        if (rbOneWay.isChecked()) {
+            layoutDateTo.setEnabled(false);
+            layoutDateTo.setVisibility(View.INVISIBLE);
+        } else {
+            layoutDateTo.setEnabled(true);
+            layoutDateTo.setVisibility(View.VISIBLE);
+        }
+
         rgRoundType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -273,8 +280,8 @@ public class FragmentDomestic extends Fragment {
         String strDepartDate = txtDepartureDate.getText().toString();
         String strReturnDate = txtReturnDate.getText().toString();
 
-        outState.putCharSequence("txtDepart", strDepartDate);
-        outState.putCharSequence("txtReturn", strReturnDate);
+        outState.putCharSequence("txtDomesDepart", strDepartDate);
+        outState.putCharSequence("txtDomesReturn", strReturnDate);
 
         FragmentDomestic fragmentDomestic = newInstance();
         fragmentDomestic.setArguments(outState);
@@ -299,13 +306,13 @@ public class FragmentDomestic extends Fragment {
         String strDepart = "";
         String strReturn = "";
         if (bundle != null) {
-            strDepart = String.valueOf(bundle.getCharSequence("txtDepart", ""));
-            strReturn = String.valueOf(bundle.getCharSequence("txtReturn", ""));
+            strDepart = String.valueOf(bundle.getCharSequence("txtDomesDepart", ""));
+            strReturn = String.valueOf(bundle.getCharSequence("txtDomesReturn", ""));
         } else {
             Log.d(TAG, "restoreView Bundle null");
         }
 
-        Log.d(TAG, "txtDepart : " + strDepart + " txtReturn :" + strReturn);
+        Log.d(TAG, "txtDomesDepart : " + strDepart + " txtDomesReturn :" + strReturn);
         Calendar mCalendar = Calendar.getInstance();
         if (!strDepart.equals("")) {
             txtDepartureDate.setText(strDepart);
@@ -359,9 +366,11 @@ public class FragmentDomestic extends Fragment {
             strRoundType = getRoundType();
             strDepartureDate = txtDepartureDate.getText().toString();
             strClassType = getClassType();
+/*
             strAdults = String.valueOf(spnAdults.getSelectedItemPosition() + 1);
             strChild = String.valueOf(spnChild.getSelectedItemPosition());
             strInfants = String.valueOf(spnInfant.getSelectedItemPosition());
+*/
 
             HashMap<String, String> mMap = new HashMap<>();
             mMap.put(KEY_ROUND_TYPE, strRoundType);
@@ -450,7 +459,7 @@ public class FragmentDomestic extends Fragment {
         for (String item : items.values()) {
             mListSpnGoTo.add(item);
         }
-        adapterGoTo = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+        adapterGoTo = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.text_view1, mListSpnGoTo);
         spnGoTo.setAdapter(adapterGoTo);
         adapterGoTo.notifyDataSetChanged();

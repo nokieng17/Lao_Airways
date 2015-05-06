@@ -5,7 +5,6 @@ package nokieng.gdgvientiane.org.laoair;
  */
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -47,7 +46,7 @@ import nokieng.gdgvientiane.org.laoair.Helper.Utilities;
 public class FragmentInternational extends Fragment {
 
     private static final String TAG = FragmentInternational.class.getSimpleName();
-    private static final String TAG_USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36";
+//    private static final String TAG_USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36";
 
     public static final String[] LEAVE_FROM = new String[]{"-- Leaving From --",
             "Phnom Penh (PNH)",
@@ -69,11 +68,11 @@ public class FragmentInternational extends Fragment {
     public static final String[] ADULTS = new String[]{"1 Adult", "2 Adults", "3 Adults", "4 Adults", "5 Adults", "6 Adults", "7 Adults", "8 Adults", "9 Adults"};
     public static final String[] CHILDREN = new String[]{"0 Children", "1 Child", "2 Children", "3 Children", "4 Children", "5 Children", "6 Children", "7 Children", "8 Children"};
     public static final String[] INFANT = new String[]{"0 Infant", "1 Infant"};
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
+//    public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String[] GOING_TO = new String[]{"-- Loading --"};
 
-    public static final String KEY_TASK = "Task";
-    public static final String KEY_CODE = "Code";
+//    public static final String KEY_TASK = "Task";
+//    public static final String KEY_CODE = "Code";
     public static final String KEY_SUCCESS = "Success";
     public static final String KEY_LEAVE_FROM = "LeaveFrom";
     public static final String KEY_GO_TO = "GoTo";
@@ -84,7 +83,7 @@ public class FragmentInternational extends Fragment {
     public static final String KEY_FULL_NAME_LEAVE = "FullNameLeave";
     public static final String KEY_FULL_NAME_GO_TO = "FullNameGoTo";
 
-    private int expireDate = 3 * 24 * 60 * 60 * 1000;
+//    private int expireDate = 3 * 24 * 60 * 60 * 1000;
 
 
     public static final String VALUE_GET_DESTINATION_INTER = "GetDestInter";
@@ -108,16 +107,16 @@ public class FragmentInternational extends Fragment {
     private LinearLayout layoutDateTo;
 
     private String strDesCode = "";
-    private String strSuccess = "";
+//    private String strSuccess = "";
     private String strRoundType = "";
     private String strLeaveFrom = "";
     private String strGoTo = "";
     private String strDepartureDate = "";
     private String strReturnDate = "";
     private String strClassType = "";
-    private String strAdults = "";
-    private String strChild = "";
-    private String strInfants = "";
+//    private String strAdults = "";
+//    private String strChild = "";
+//    private String strInfants = "";
 
     private int intYears;
     private int intMonth;
@@ -132,12 +131,12 @@ public class FragmentInternational extends Fragment {
     private HashMap<String, String> mMapSpnGoTo = new HashMap<>();
     private ArrayList<String> mListSpnGoTo = new ArrayList<>();
 
-    private Context dialogContext = null;
+//    private Context dialogContext = null;
     private boolean isRestore = false;
 
-    public FragmentInternational() {
+/*    public FragmentInternational() {
         dialogContext = getActivity();
-    }
+    }*/
 
 
     @Override
@@ -169,19 +168,19 @@ public class FragmentInternational extends Fragment {
         btnSearch = (Button) rootView.findViewById(R.id.btn_inter_search);
 
         //set all adpater
-        adapterLeaveFrom = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+        adapterLeaveFrom = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.text_view1, LEAVE_FROM);
         spnLeaveFrom.setAdapter(adapterLeaveFrom);
 
-        adapterAdults = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+        adapterAdults = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.text_view1, ADULTS);
         spnAdults.setAdapter(adapterAdults);
 
-        adapterChildren = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+        adapterChildren = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.text_view1, CHILDREN);
         spnChild.setAdapter(adapterChildren);
 
-        adapterInfant = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+        adapterInfant = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.text_view1, INFANT);
         spnInfant.setAdapter(adapterInfant);
 
@@ -190,7 +189,7 @@ public class FragmentInternational extends Fragment {
             spnGoTo.setSelection(0);
         }
 
-        restoreStateView(getArguments());
+        restoreStateView(savedInstanceState);
 
         spnLeaveFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -199,7 +198,7 @@ public class FragmentInternational extends Fragment {
                 mMapSpnGoTo.clear();
                 mListSpnGoTo.clear();
 
-                adapterGoTo = new ArrayAdapter<String>(getActivity().getApplicationContext()
+                adapterGoTo = new ArrayAdapter<>(getActivity().getApplicationContext()
                         , R.layout.text_view1, GOING_TO);
                 spnGoTo.setAdapter(adapterGoTo);
                 adapterGoTo.notifyDataSetChanged();
@@ -265,6 +264,13 @@ public class FragmentInternational extends Fragment {
             }
         });
 
+        if (rbOneWay.isChecked()) {
+            layoutDateTo.setEnabled(false);
+            layoutDateTo.setVisibility(View.INVISIBLE);
+        } else {
+            layoutDateTo.setEnabled(true);
+            layoutDateTo.setVisibility(View.VISIBLE);
+        }
         rgRoundType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -291,18 +297,12 @@ public class FragmentInternational extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        utilities = new Utilities(getActivity());
-        String strDepartDate = utilities.convertLongToDateTime(utilities.getCurrentDateInMillis());
-        String strReturnDate = utilities.convertLongToDateTime(utilities.getCurrentDateInMillis());
-        if (null != txtDepartureDate) {
-            strDepartDate = txtDepartureDate.getText().toString();
-        }
-        if (null != txtReturnDate) {
-            strReturnDate = txtReturnDate.getText().toString();
-        }
 
-        outState.putCharSequence("txtDepart", strDepartDate);
-        outState.putCharSequence("txtReturn", strReturnDate);
+        String strDepartDate = txtDepartureDate.getText().toString();
+        String strReturnDate = txtReturnDate.getText().toString();
+//        Log.d(TAG, "SAVE : " + strDepartDate + strReturnDate);
+        outState.putCharSequence("txtInterDepart", strDepartDate);
+        outState.putCharSequence("txtInterReturn", strReturnDate);
 
         FragmentInternational fragmentInternational = newInstance();
         fragmentInternational.setArguments(outState);
@@ -327,13 +327,13 @@ public class FragmentInternational extends Fragment {
         String strDepart = "";
         String strReturn = "";
         if (bundle != null) {
-            strDepart = String.valueOf(bundle.getCharSequence("txtDepart", ""));
-            strReturn = String.valueOf(bundle.getCharSequence("txtReturn", ""));
-        } else {
+            strDepart = String.valueOf(bundle.getString("txtInterDepart", ""));
+            strReturn = String.valueOf(bundle.getString("txtInterReturn", ""));
+        } /*else {
             Log.d(TAG, "restoreView Bundle null");
-        }
+        }*/
 
-        Log.d(TAG, "txtDepart : " + strDepart + " txtReturn :" + strReturn);
+//        Log.d(TAG, "txtInterDepart : " + strDepart + " txtInterReturn :" + strReturn);
         Calendar mCalendar = Calendar.getInstance();
         if (!strDepart.equals("")) {
             txtDepartureDate.setText(strDepart);
@@ -387,9 +387,9 @@ public class FragmentInternational extends Fragment {
             strRoundType = getRoundType();
             strDepartureDate = txtDepartureDate.getText().toString();
             strClassType = getClassType();
-            strAdults = String.valueOf(spnAdults.getSelectedItemPosition() + 1);
+/*            strAdults = String.valueOf(spnAdults.getSelectedItemPosition() + 1);
             strChild = String.valueOf(spnChild.getSelectedItemPosition());
-            strInfants = String.valueOf(spnInfant.getSelectedItemPosition());
+            strInfants = String.valueOf(spnInfant.getSelectedItemPosition());*/
 
             HashMap<String, String> mMap = new HashMap<>();
             mMap.put(KEY_ROUND_TYPE, strRoundType);
@@ -478,7 +478,7 @@ public class FragmentInternational extends Fragment {
         for (String item : items.values()) {
             mListSpnGoTo.add(item);
         }
-        adapterGoTo = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+        adapterGoTo = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.text_view1, mListSpnGoTo);
         spnGoTo.setAdapter(adapterGoTo);
         adapterGoTo.notifyDataSetChanged();

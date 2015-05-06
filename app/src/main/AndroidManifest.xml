@@ -65,6 +65,7 @@
             android:writePermission="nokieng.gdgvientiane.org.laoair.WRITE" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".AboutActivity"
             android:label="@string/action_about"/>
     </application>
