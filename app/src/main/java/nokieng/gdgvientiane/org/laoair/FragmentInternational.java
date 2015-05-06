@@ -68,10 +68,10 @@ public class FragmentInternational extends Fragment {
     public static final String[] ADULTS = new String[]{"1 Adult", "2 Adults", "3 Adults", "4 Adults", "5 Adults", "6 Adults", "7 Adults", "8 Adults", "9 Adults"};
     public static final String[] CHILDREN = new String[]{"0 Children", "1 Child", "2 Children", "3 Children", "4 Children", "5 Children", "6 Children", "7 Children", "8 Children"};
     public static final String[] INFANT = new String[]{"0 Infant", "1 Infant"};
-//    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    //    public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String[] GOING_TO = new String[]{"-- Loading --"};
 
-//    public static final String KEY_TASK = "Task";
+    //    public static final String KEY_TASK = "Task";
 //    public static final String KEY_CODE = "Code";
     public static final String KEY_SUCCESS = "Success";
     public static final String KEY_LEAVE_FROM = "LeaveFrom";
@@ -107,7 +107,7 @@ public class FragmentInternational extends Fragment {
     private LinearLayout layoutDateTo;
 
     private String strDesCode = "";
-//    private String strSuccess = "";
+    //    private String strSuccess = "";
     private String strRoundType = "";
     private String strLeaveFrom = "";
     private String strGoTo = "";
@@ -131,7 +131,7 @@ public class FragmentInternational extends Fragment {
     private HashMap<String, String> mMapSpnGoTo = new HashMap<>();
     private ArrayList<String> mListSpnGoTo = new ArrayList<>();
 
-//    private Context dialogContext = null;
+    //    private Context dialogContext = null;
     private boolean isRestore = false;
 
 /*    public FragmentInternational() {
