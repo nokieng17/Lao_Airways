@@ -10,6 +10,7 @@ import nokieng.gdgvientiane.org.laoair.FragmentInternational;
 
 /**
  * Created by kieng on 3/31/2015.
+ *
  */
 public class AdapterPager extends FragmentPagerAdapter {
 
