@@ -2,6 +2,7 @@ package nokieng.gdgvientiane.org.laoair;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
@@ -32,7 +33,7 @@ import nokieng.gdgvientiane.org.laoair.data.KContact;
 public class SplashScreenActivity extends ActionBarActivity {
 
     private static final String TAG = SplashScreenActivity.class.getSimpleName();
-
+    private SharedPreferences sp;
 
     Runnable runnable;
     Handler handler;
@@ -40,7 +41,7 @@ public class SplashScreenActivity extends ActionBarActivity {
     Long delay_time;
     Long time = 200l;
 
-    boolean isFirstUse = true;
+    boolean isFirstUse;
     private Utilities utilities;
 
     @Override
@@ -53,7 +54,6 @@ public class SplashScreenActivity extends ActionBarActivity {
                     .add(R.id.splash_screen_container, PlaceholderFragment.newInstance())
                     .commit();
         }
-
         utilities = new Utilities(SplashScreenActivity.this);
         isFirstUse = utilities.isFirstUse();
 
@@ -178,13 +178,12 @@ public class SplashScreenActivity extends ActionBarActivity {
             txtVersion = (TextView) rootView.findViewById(R.id.txt_splash_vesion);
 
             Utilities utilities = new Utilities(getActivity().getApplicationContext());
-            strVersion = utilities.getVersion();
+            strVersion = utilities.getVersion(utilities.isFirstUse());
 
             txtVersion.setText(strVersion);
 
             return rootView;
         }
-
     }
 
     private void intent() {

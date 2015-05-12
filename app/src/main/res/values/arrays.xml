@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="INTER_LEAVE_FROM">
+        <item>-- Leaving From --</item>
+        <item>Phnom Penh (PNH)</item>
+        <item>Siem Reap (REP)</item>
+        <item>GuangZhou (CAN)</item>
+        <item>Jinghong (JHG)</item>
+        <item>Kunming (KMG)</item>
+        <item>Seoul (SEL)</item>
+        <item>Luang Prabang (LPQ)</item>
+        <item>Pakse (PKZ)</item>
+        <item>Savannakhet (ZVK)</item>
+        <item>Vientiane (VTE)</item>
+        <item>Singapore (SIN)</item>
+        <item>Bangkok (BKK)</item>
+        <item>Chiangmai (CNX)</item>
+        <item>Hanoi (HAN)</item>
+        <item>Ho Chi Minh (SGN)</item>
+    </array>
+
+    <array name="ADULTS">
+        <item>1 Adult</item>
+        <item>2 Adults</item>
+        <item>3 Adults</item>
+        <item>4 Adults</item>
+        <item>5 Adults</item>
+        <item>6 Adults</item>
+        <item>7 Adults</item>
+        <item>8 Adults</item>
+        <item>9 Adults</item>
+    </array>
+
+    <array name="CHILDREN">
+        <item>0 Children</item>
+        <item>1 Child</item>
+        <item>2 Children</item>
+        <item>3 Children</item>
+        <item>4 Children</item>
+        <item>5 Children</item>
+        <item>6 Children</item>
+        <item>7 Children</item>
+        <item>8 Children</item>
+    </array>
+
+    <array name="INFANT">
+        <item>0 Infant</item>
+        <item>1 Infant</item>
+    </array>
+
+    <array name="GOING_TO">
+        <item>-- Loading --</item>
+    </array>
+
+    <array name="DOMESTIC_LEAVE_FROM">
+        <item>-- Leaving From --</item>
+        <item>Luang Namtha (LXG)</item>
+        <item>Luang Prabang (LPQ)</item>
+        <item>Oudomxay (ODY)</item>
+        <item>Pakse (PKZ)</item>
+        <item>Savannakhet (ZVK)</item>
+        <item>Vientiane (VTE)</item>
+        <item>Xieng Khouang (XKH)</item>
+    </array>
+
+</resources>

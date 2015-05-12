@@ -1,7 +1,8 @@
 package nokieng.gdgvientiane.org.laoair;
 
 /**
- * Created by kieng on 3/31/2015.
+ * Created by kieng on 3/31/2015. on project K Flight
+ * package name ${PACKAGE_NAME}
  */
 
 import android.app.DatePickerDialog;
@@ -48,31 +49,14 @@ public class FragmentInternational extends Fragment {
     private static final String TAG = FragmentInternational.class.getSimpleName();
 //    private static final String TAG_USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36";
 
-    public static final String[] LEAVE_FROM = new String[]{"-- Leaving From --",
-            "Phnom Penh (PNH)",
-            "Siem Reap (REP)",
-            "GuangZhou (CAN)",
-            "Jinghong (JHG)",
-            "Kunming (KMG)",
-            "Seoul (SEL)",
-            "Luang Prabang (LPQ)",
-            "Pakse (PKZ)",
-            "Savannakhet (ZVK)",
-            "Vientiane (VTE)",
-            "Singapore (SIN)",
-            "Bangkok (BKK)",
-            "Chiangmai (CNX)",
-            "Hanoi (HAN)",
-            "Ho Chi Minh (SGN)"};
+    public static String[] LEAVE_FROM = new String[]{};
 
-    public static final String[] ADULTS = new String[]{"1 Adult", "2 Adults", "3 Adults", "4 Adults", "5 Adults", "6 Adults", "7 Adults", "8 Adults", "9 Adults"};
-    public static final String[] CHILDREN = new String[]{"0 Children", "1 Child", "2 Children", "3 Children", "4 Children", "5 Children", "6 Children", "7 Children", "8 Children"};
-    public static final String[] INFANT = new String[]{"0 Infant", "1 Infant"};
-    //    public static final String DATE_FORMAT = "yyyy-MM-dd";
-    public static final String[] GOING_TO = new String[]{"-- Loading --"};
+    public static String[] ADULTS = new String[]{};
+    public static String[] CHILDREN = new String[]{};
+    public static String[] INFANT = new String[]{};
+    public static String[] GOING_TO = new String[]{};
 
-    //    public static final String KEY_TASK = "Task";
-//    public static final String KEY_CODE = "Code";
+
     public static final String KEY_SUCCESS = "Success";
     public static final String KEY_LEAVE_FROM = "LeaveFrom";
     public static final String KEY_GO_TO = "GoTo";
@@ -145,6 +129,12 @@ public class FragmentInternational extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_international, container, false);
 
         utilities = new Utilities(getActivity());
+
+        //initial resource VALUES
+        LEAVE_FROM = getResources().getStringArray(R.array.INTER_LEAVE_FROM);
+        ADULTS = getResources().getStringArray(R.array.ADULTS);
+        CHILDREN = getResources().getStringArray(R.array.CHILDREN);
+        INFANT = getResources().getStringArray(R.array.INFANT);
 
         rgRoundType = (RadioGroup) rootView.findViewById(R.id.rg_inter_way);
         rgClassType = (RadioGroup) rootView.findViewById(R.id.rg_inter_trip_type);

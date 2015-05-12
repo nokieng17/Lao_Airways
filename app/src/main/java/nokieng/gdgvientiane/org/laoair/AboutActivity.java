@@ -69,7 +69,7 @@ public class AboutActivity extends ActionBarActivity {
             txtVersion = (TextView) rootView.findViewById(R.id.txt_about_version);
             Utilities utilities = new Utilities(getActivity().getApplicationContext());
 
-            txtVersion.setText(utilities.getVersion());
+            txtVersion.setText(utilities.getVersion(false));
 
             toolbar = (Toolbar) rootView.findViewById(R.id.toolbar_about);
 

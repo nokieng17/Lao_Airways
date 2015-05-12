@@ -46,19 +46,13 @@ public class FragmentDomestic extends Fragment {
     private static final String TAG = FragmentDomestic.class.getSimpleName();
 //    private static final String TAG_USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36";
 
-    public static final String[] LEAVE_FROM = new String[]{"-- Leaving From --",
-            "Luang Namtha (LXG)",
-            "Luang Prabang (LPQ)",
-            "Oudomxay (ODY)",
-            "Pakse (PKZ)",
-            "Savannakhet (ZVK)",
-            "Vientiane (VTE)",
-            "Xieng Khouang (XKH)"};
+    public static String[] LEAVE_FROM = new String[]{};
 
-    public static final String[] ADULTS = new String[]{"1 Adult", "2 Adults", "3 Adults", "4 Adults", "5 Adults", "6 Adults", "7 Adults", "8 Adults", "9 Adults"};
-    public static final String[] CHILDREN = new String[]{"0 Children", "1 Child", "2 Children", "3 Children", "4 Children", "5 Children", "6 Children", "7 Children", "8 Children"};
-    public static final String[] INFANT = new String[]{"0 Infant", "1 Infant"};
-    public static final String[] GOING_TO = new String[]{"-- Loading --"};
+
+    public static String[] ADULTS = new String[]{};
+    public static String[] CHILDREN = new String[]{};
+    public static String[] INFANT = new String[]{};
+    public static String[] GOING_TO = new String[]{};
 
     public static final String KEY_SUCCESS = "Success";
     public static final String KEY_LEAVE_FROM = "LeaveFrom";
@@ -93,16 +87,12 @@ public class FragmentDomestic extends Fragment {
     private LinearLayout layoutDateTo;
 
     private String strDesCode = "";
-//    private String strSuccess = "";
     private String strRoundType = "";
     private String strLeaveFrom = "";
     private String strGoTo = "";
     private String strDepartureDate = "";
     private String strReturnDate = "";
     private String strClassType = "";
-//    private String strAdults = "";
-//    private String strChild = "";
-//    private String strInfants = "";
 
     private int intYears;
     private int intMonth;
@@ -117,18 +107,21 @@ public class FragmentDomestic extends Fragment {
     private HashMap<String, String> mMapSpnGoTo = new HashMap<>();
     private ArrayList<String> mListSpnGoTo = new ArrayList<>();
 
-//    private Context dialogContext = null;
     private boolean isRestore = false;
 
-//    public FragmentDomestic() {
-//        dialogContext = getActivity();
-//    }
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_domestic, container, false);
+
+        //initial resource VALUES
+        LEAVE_FROM = getResources().getStringArray(R.array.INTER_LEAVE_FROM);
+        ADULTS = getResources().getStringArray(R.array.ADULTS);
+        CHILDREN = getResources().getStringArray(R.array.CHILDREN);
+        INFANT = getResources().getStringArray(R.array.INFANT);
 
         rgRoundType = (RadioGroup) rootView.findViewById(R.id.rg_domestic_way);
         rgClassType = (RadioGroup) rootView.findViewById(R.id.rg_domestic_trip_type);

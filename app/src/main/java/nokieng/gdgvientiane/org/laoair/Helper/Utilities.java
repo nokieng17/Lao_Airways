@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +23,7 @@ import nokieng.gdgvientiane.org.laoair.R;
 import nokieng.gdgvientiane.org.laoair.data.KContact;
 
 /**
- * Created by kieng on 4/9/2015.
+ * Created by kieng on 4/9/2015. K Flight
  */
 public class Utilities {
 
@@ -31,22 +32,25 @@ public class Utilities {
     private SharedPreferences settingPre;
 
     private Context mContext;
+    private static Locale locale;
 
     public Utilities(Context context) {
         this.mContext = context;
         settingPre = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        locale = mContext.getResources().getConfiguration().locale;
 //        Log.d(TAG, "Currency : " + settingPre.getString(context.getString(R.string.KEY_CURRENCY), ""));
 //        Log.d(TAG, "Pref History :" + settingPre.getString(mContext.getResources().getString(R.string.KEY_KEEP_HISTORY), "DEFAULT"));
     }
 
     public boolean isFirstUse() {
-        return settingPre.getBoolean(mContext.getResources().getString(R.string.KEY_IS_FIRST_USE), false);
+        //if no data first used is true,
+        return settingPre.getBoolean(mContext.getResources().getString(R.string.KEY_IS_FIRST_USE), true);
     }
 
     public void setUsed() {
         SharedPreferences.Editor editor = settingPre.edit();
-        editor.putBoolean(mContext.getResources().getString(R.string.KEY_IS_FIRST_USE), false);
-        editor.commit();
+        editor.putBoolean(mContext.getResources().getString(R.string.KEY_IS_FIRST_USE), false); //set false mean used
+        editor.apply();
     }
 
     public int getNumDayKeepHistory() {
@@ -60,7 +64,7 @@ public class Utilities {
             int month = calendar.get(Calendar.MONTH) + 1;
             int year = calendar.get(Calendar.YEAR);
             String strNow = String.valueOf(day) + "-" + String.valueOf(month) + "-" + String.valueOf(year);
-            SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
+            SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT, locale);
             Date date1 = df.parse(date);
             Date now = df.parse(strNow);
 
@@ -74,7 +78,7 @@ public class Utilities {
 
     public static boolean isDateAfter(String startDate, String endDate) {
         try {
-            SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
+            SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT, locale);
             Date date1 = df.parse(endDate);
             Date startingDate = df.parse(startDate);
 
@@ -87,7 +91,7 @@ public class Utilities {
 
     public boolean isDateValid(String date) {
         try {
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+            DateFormat df = new SimpleDateFormat(DATE_FORMAT, locale);
             df.setLenient(false);
             df.parse(date);
             return true;
@@ -137,7 +141,7 @@ public class Utilities {
                     String d = String.valueOf(TimeUnit.MILLISECONDS.toHours(drift));
                     return (d + " hours ago");
                 } else {
-                    return String.valueOf(TimeUnit.MILLISECONDS.toDays(drift));
+                    return String.valueOf(TimeUnit.MILLISECONDS.toDays(drift)) + " Days ago";
                 }
             } else
                 return String.valueOf(convertLongToDateTime(date));
@@ -145,7 +149,7 @@ public class Utilities {
             return "Date must greater than now";
     }
 
-    public String getVersion() {
+    public String getVersion(boolean isFirstUsed) {
         String versionName = "Lao Airways V ";
         try {
             versionName = versionName + mContext.getPackageManager()
@@ -154,12 +158,13 @@ public class Utilities {
             e.printStackTrace();
             versionName = "Unavailable Version";
         }
-        return versionName;
+        return versionName +
+                "\n \n" + (isFirstUsed ? "Preparing for first used..." : "");
     }
 
     public String calPrice(String price) {
         settingPre = PreferenceManager.getDefaultSharedPreferences(mContext);
-        Cursor cursor = null;
+        Cursor cursor;
 
         String params = price.replaceAll("[a-zA-Z]", "").trim();
         float num = Float.valueOf(params);
@@ -167,46 +172,53 @@ public class Utilities {
         Log.d(TAG, "unit : " + unit);
         Log.d(TAG, "Price :" + num);
         String strRate = "";
-        if (unit.equals("USD")) {
-            strRate = String.valueOf(num);   //DEFAULT of currency is USD
-        } else if (unit.equals("EUR")) {
-            cursor = getExchangeRate(("USD" + unit).toUpperCase());
-            cursor.moveToFirst();
-            float rate = Float.valueOf(cursor.getString(KContact.CurrencyRate.COL_RATE));
-            strRate = String.valueOf(num * rate);
-        } else if (unit.equals("CNY")) {
-            cursor = getExchangeRate(("USD" + unit).toUpperCase());
-            cursor.moveToFirst();
-            strRate = String.valueOf(num * Float.valueOf(cursor.getString(KContact.CurrencyRate.COL_RATE)));
-        } else if (unit.equals("THB")) {
-            cursor = getExchangeRate(("USD" + unit).toUpperCase());
-            cursor.moveToFirst();
-            strRate = String.valueOf(num * Float.valueOf(cursor.getString(KContact.CurrencyRate.COL_RATE)));
-        } else if (unit.equals("LAK")) {
-            cursor = getExchangeRate(("USD" + unit).toUpperCase());
-            cursor.moveToFirst();
-            strRate = String.valueOf(num * Float.valueOf(cursor.getString(KContact.CurrencyRate.COL_RATE)));
+        assert unit != null;
+        switch (unit) {
+            case "USD":
+                strRate = String.valueOf(num);   //DEFAULT of currency is USD
+
+                break;
+            case "EUR":
+                cursor = getExchangeRate(("USD" + unit).toUpperCase());
+                cursor.moveToFirst();
+                float rate = Float.valueOf(cursor.getString(KContact.CurrencyRate.COL_RATE));
+                strRate = String.valueOf(num * rate);
+                break;
+            case "CNY":
+                cursor = getExchangeRate(("USD" + unit).toUpperCase());
+                cursor.moveToFirst();
+                strRate = String.valueOf(num * Float.valueOf(cursor.getString(KContact.CurrencyRate.COL_RATE)));
+                break;
+            case "THB":
+                cursor = getExchangeRate(("USD" + unit).toUpperCase());
+                cursor.moveToFirst();
+                strRate = String.valueOf(num * Float.valueOf(cursor.getString(KContact.CurrencyRate.COL_RATE)));
+                break;
+            case "LAK":
+                cursor = getExchangeRate(("USD" + unit).toUpperCase());
+                cursor.moveToFirst();
+                strRate = String.valueOf(num * Float.valueOf(cursor.getString(KContact.CurrencyRate.COL_RATE)));
+                break;
         }
         return strRate + " " + unit.toUpperCase();
     }
 
     private Cursor getExchangeRate(String currency) {
         Uri uri = Uri.parse(KContact.CurrencyRate.CONTENT_URI + "/" + currency);
-        Cursor cursor = mContext.getContentResolver().query(uri,
+        return mContext.getContentResolver().query(uri,
                 KContact.CurrencyRate.columnHacks,
                 null,
                 null,
                 null);
-        return cursor;
     }
 
-    public void ClearHistory() {
+/*    public void ClearHistory() {
         long _id = mContext.getContentResolver().delete(
                 KContact.History.CONTENT_URI,
                 null,
                 null
         );
-    }
+    }*/
 
     /*
     * International
