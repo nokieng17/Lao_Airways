@@ -23,6 +23,7 @@ public class AdapterAllFlight extends ArrayAdapter<HashMap<String, String>> {
     private static final String TAG = AdapterAllFlight.class.getSimpleName();
 
     public static final String KEY_SUCCESS = "Success";
+
     public static final String KEY_FLIGHT_NO = "FlightNO";
     public static final String KEY_CLASS = "ClassType";
     public static final String KEY_PRICE = "Price";
