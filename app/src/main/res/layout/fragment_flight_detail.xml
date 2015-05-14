@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="nokieng.gdgvientiane.org.laoair.FLightDetailActivity$DetailFragment">
+    tools:context="nokieng.gdgvientiane.org.laoair.FragmentDetail">
 
     <include
         android:id="@+id/toolbar_detail"

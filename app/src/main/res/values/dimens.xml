@@ -7,4 +7,5 @@
     <dimen name="dp10">10dp</dimen>
     <dimen name="dp1">1dp</dimen>
     <dimen name="dev_text_size">24sp</dimen>
+    <dimen name="padding_item_all_flight">10dp</dimen>
 </resources>

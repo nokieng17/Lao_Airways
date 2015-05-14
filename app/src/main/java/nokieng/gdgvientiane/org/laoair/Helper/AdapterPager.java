@@ -35,7 +35,7 @@ public class AdapterPager extends FragmentPagerAdapter {
         }
     }
 
-    //This is the title of the page that will apppear on the "tab"
+    //This is the title of the page that will appear on the "tab"
     @Override
     public CharSequence getPageTitle(int position) {
         return TITLES[position];

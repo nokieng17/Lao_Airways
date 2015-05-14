@@ -62,7 +62,8 @@ public class AdapterAllFlight extends ArrayAdapter<HashMap<String, String>> {
             viewHolder.txtPrice = (TextView) rootView.findViewById(R.id.txt_all_flight_price);
             viewHolder.txtDepart = (TextView) rootView.findViewById(R.id.txt_all_flight_depart_arrive);
             viewHolder.txtLeaveReturn = (TextView) rootView.findViewById(R.id.txt_all_flight_leave_return);
-            viewHolder.imvLogo = (ImageView) rootView.findViewById(R.id.imv_all_flight);
+            if (viewHolder.imvLogo != null)
+                viewHolder.imvLogo = (ImageView) rootView.findViewById(R.id.imv_all_flight);
 
 
             rootView.setTag(viewHolder);
@@ -76,7 +77,8 @@ public class AdapterAllFlight extends ArrayAdapter<HashMap<String, String>> {
             viewHolder.txtDepart.setText("Depart: " + listAllItem.get(position).get(KEY_DEPART) + " (" + strLeaveFrom + ")      " +
                     "Arrive: " + listAllItem.get(position).get(KEY_ARRIVE) + " (" + strGoTo + ")");
             viewHolder.txtLeaveReturn.setText(listAllItem.get(position).get(KEY_LEAVE_RETURN) + " Flight");
-            viewHolder.imvLogo.setImageDrawable(getActivity.getResources().getDrawable(R.drawable.ic_plane));
+            if (viewHolder.imvLogo != null)
+                viewHolder.imvLogo.setImageDrawable(getActivity.getResources().getDrawable(R.drawable.ic_plane));
         }
 
         return rootView;
@@ -104,4 +106,6 @@ public class AdapterAllFlight extends ArrayAdapter<HashMap<String, String>> {
     public long getItemId(int position) {
         return super.getItemId(position);
     }
+
+
 }

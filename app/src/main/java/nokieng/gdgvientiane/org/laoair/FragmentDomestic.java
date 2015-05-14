@@ -122,6 +122,7 @@ public class FragmentDomestic extends Fragment {
         ADULTS = getResources().getStringArray(R.array.ADULTS);
         CHILDREN = getResources().getStringArray(R.array.CHILDREN);
         INFANT = getResources().getStringArray(R.array.INFANT);
+        GOING_TO = getResources().getStringArray(R.array.GOING_TO);
 
         rgRoundType = (RadioGroup) rootView.findViewById(R.id.rg_domestic_way);
         rgClassType = (RadioGroup) rootView.findViewById(R.id.rg_domestic_trip_type);

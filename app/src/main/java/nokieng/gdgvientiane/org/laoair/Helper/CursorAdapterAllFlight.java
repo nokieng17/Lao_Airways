@@ -95,6 +95,5 @@ public class CursorAdapterAllFlight extends CursorAdapter {
                 " (" + cursor.getString(KContact.History.COL_GO_TO) + ")");
         viewHolder.txtLeaveReturn.setText(cursor.getString(KContact.History.COL_LEAVE_RETURN) + " Flight");
         viewHolder.txtDateHistory.setText(dateInsert);
-
     }
 }

@@ -4,8 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-
-import nokieng.gdgvientiane.org.laoair.Helper.Utilities;
+import android.util.Log;
 
 /**
  * Created by kieng on 4/10/2015.
@@ -58,6 +57,7 @@ public class HistoryTable {
     }
 
     public boolean checkIfFlightExists(String leaveFrom, String goTo, String leaveTime) {
+        Log.d(TAG, "checkIfFlightExists : " + leaveFrom + goTo + leaveTime);
         Uri uri = Uri.parse(KContact.History.CONTENT_URI + "/" + leaveFrom + "/" + goTo + "/" + leaveTime);
        /* String where = KContact.History.COLUMN_LEAVE_FROM + " = " + leaveFrom +
                 " AND " + KContact.History.COLUMN_GO_TO + " = " + goTo +

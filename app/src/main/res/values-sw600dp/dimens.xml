@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding_item_all_flight">5dp</dimen>
+
+    <dimen name="activity_horizontal_margin">64dp</dimen>
+
+    <dimen name="dp10">20dp</dimen>
+    <dimen name="dev_text_size">30sp</dimen>
+</resources>

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="nokieng.gdgvientiane.org.laoair.AllFlightActivity.fragmentAllFlight">
+    tools:context=".FragmentAllFlight">
 
     <include
         android:id="@+id/toolbar_all_flight"
@@ -30,6 +30,7 @@
 
         <ListView
             android:id="@+id/lv_all_flight"
+            style="@style/ListStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/activity_vertical_margin"

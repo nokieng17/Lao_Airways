@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:divider="?android:attr/dividerHorizontal"
+    android:orientation="horizontal"
+    tools:context=".AllFlightActivity">
+
+
+    <!-- android:name="nokieng.gdgvientiane.org.laoair.FragmentAllFlight"
+     tools:context="nokieng.gdgvientiane.org.laoair.AllFlightActivity"-->
+
+    <!--tools:layout="@layout/fragment_all_flight"-->
+    <fragment
+        android:id="@+id/fragment_all_flight"
+        android:name="nokieng.gdgvientiane.org.laoair.FragmentAllFlight"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        tools:layout="@layout/fragment_all_flight" />
+
+    <FrameLayout
+        android:id="@+id/fragment_flight_detail"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="8" />
+
+</LinearLayout>

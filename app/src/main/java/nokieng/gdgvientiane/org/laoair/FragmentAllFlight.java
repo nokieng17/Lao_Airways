@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -41,9 +42,11 @@ public class FragmentAllFlight extends Fragment {
 
     private final String TAG = FragmentAllFlight.class.getSimpleName();
 
+    private AdapterAllFlight adapter;
     //HasMap get search from intent
     private HashMap<String, String> mMapSearch = new HashMap<>();
     public static final String KEY_HASHMAP_SEARCH = "HashMapSearch";
+    public static final String KEY_TWO_PANE = "mTwoPane";
     private TextView txtHeader;
     private ListView lvFlight;
 
@@ -68,14 +71,16 @@ public class FragmentAllFlight extends Fragment {
     private ArrayList<HashMap<String, String>> mListMapAll = new ArrayList<>();
     //    private Vector<ContentValues> vValues;
     private static final int ALL_FLIGHT_LOADER = 12;
+    private boolean mTwoPane = false;
 
-    public FragmentAllFlight() {
+    public interface Callback {
+        public void onItemSelected(HashMap<String, String> items, boolean isClick);
     }
 
-    public static FragmentAllFlight newInstance(HashMap<String, String> mMap) {
+    public static FragmentAllFlight newInstance() {
         FragmentAllFlight fragment = new FragmentAllFlight();
         Bundle args = new Bundle();
-        args.putSerializable(KEY_HASHMAP_SEARCH, mMap);
+        args.putBoolean("KEY", false);
         fragment.setArguments(args);
         return fragment;
     }
@@ -83,23 +88,21 @@ public class FragmentAllFlight extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
+        mTwoPane = getResources().getBoolean(R.bool.mTwoPane);
+        if (!mTwoPane) {
+            setHasOptionsMenu(true);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        if (getArguments() != null) {
-//            Log.d(TAG, "getArguments : " + getArguments());
-            mMapSearch = (HashMap<String, String>) getArguments().getSerializable(KEY_HASHMAP_SEARCH);
-        } else {
-//            Log.d(TAG, "getArguments null");
-        }
-
         View rootView = inflater.inflate(R.layout.fragment_all_flight, container, false);
 
+        Intent getIntent = getActivity().getIntent();
+        mMapSearch = (HashMap<String, String>) getIntent.getSerializableExtra(KEY_HASHMAP_SEARCH);
+        Log.d(TAG, "mMapSearch getIntent : " + mMapSearch);
 
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar_all_flight);
         pb = (ProgressBar) rootView.findViewById(R.id.pb_all_flight);
@@ -111,16 +114,13 @@ public class FragmentAllFlight extends Fragment {
 
         txtHeader = (TextView) rootView.findViewById(R.id.txt_all_flight_header);
         lvFlight = (ListView) rootView.findViewById(R.id.lv_all_flight);
+        lvFlight.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
-//        Intent intent = getActivity().getIntent();
+
         sharedPreferences = getActivity().getSharedPreferences("AllFLight", 0x0000);        //0x0000 is MODE_PRIVATE or 0
-//        mMapSearch = (HashMap<String, String>) intent.getSerializableExtra("MapMainActivity");
-        Log.d(TAG, "mMapSearch : " + mMapSearch);
 
 
         if (mMapSearch != null) {
-//                Log.d(TAG, "get intent : " + mMapSearch.toString());
-
             strLeaveFrom = mMapSearch.get(FragmentInternational.KEY_LEAVE_FROM);
             strGoTo = mMapSearch.get(FragmentInternational.KEY_GO_TO);
             strClassType = mMapSearch.get(FragmentInternational.KEY_CLASS_TYPE);
@@ -147,8 +147,9 @@ public class FragmentAllFlight extends Fragment {
             strLeaveDate = sharedPreferences.getString(FragmentInternational.KEY_LEAVE_DATE, "");
             strReturnDate = sharedPreferences.getString(FragmentInternational.KEY_RETURN_DATE, "");
         }
-        if (strLeaveFrom.equals("") || strGoTo.equals("") || strClassType.equals("") || strRoundType.equals("") | strLeaveDate.equals("")) {
-            Toast.makeText(getActivity(), "Invalid data ...!", Toast.LENGTH_SHORT).show();
+
+        if (strLeaveFrom.equals("") || strGoTo.equals("") || strClassType.equals("") || strRoundType.equals("") || strLeaveDate.equals("")) {
+            Toast.makeText(getActivity().getApplicationContext(), "Invalid data ...!", Toast.LENGTH_SHORT).show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -157,30 +158,48 @@ public class FragmentAllFlight extends Fragment {
                 }
             }, 1000);
         }
-        aqGetDestination(strLeaveFrom, strGoTo, strClassType, strRoundType);
+
         return rootView;
     }
 
     @Override
     public void onResume() {
-
         super.onResume();
+
+        if (adapter == null)
+            aqGetDestination(strLeaveFrom, strGoTo, strClassType, strRoundType);
+        else {
+            if (adapter.getCount() == -1)
+                aqGetDestination(strLeaveFrom, strGoTo, strClassType, strRoundType);
+        }
+
+        lvFlight.setSelected(true);
+
         lvFlight.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HashMap<String, String> item = (HashMap<String, String>) lvFlight.getItemAtPosition(position);
-                Intent intentDetail = new Intent(getActivity(), FLightDetailActivity.class);
-                intentDetail.putExtra(AdapterAllFlight.KEY_FLIGHT_NO, item.get(AdapterAllFlight.KEY_FLIGHT_NO));
-                intentDetail.putExtra(AdapterAllFlight.KEY_CLASS, item.get(AdapterAllFlight.KEY_CLASS));
-                intentDetail.putExtra(AdapterAllFlight.KEY_PRICE, item.get(AdapterAllFlight.KEY_PRICE));
-                intentDetail.putExtra(AdapterAllFlight.KEY_DEPART, item.get(AdapterAllFlight.KEY_DEPART));
-                intentDetail.putExtra(AdapterAllFlight.KEY_ARRIVE, item.get(AdapterAllFlight.KEY_ARRIVE));
-                intentDetail.putExtra(AdapterAllFlight.KEY_LEAVE_RETURN, item.get(AdapterAllFlight.KEY_LEAVE_RETURN));
-                intentDetail.putExtra(AdapterAllFlight.KEY_DETAIL, item.get(AdapterAllFlight.KEY_DETAIL));
+                item.put(FragmentInternational.KEY_LEAVE_FROM, strLeaveFrom);
+                item.put(FragmentInternational.KEY_GO_TO, strGoTo);
+                if (mTwoPane) {
+                    ((Callback) getActivity()).onItemSelected(
+                            item, true
+                    );
+                } else {
+                    Intent intentDetail = new Intent(getActivity(), FLightDetailActivity.class);
+                    intentDetail.putExtra(AdapterAllFlight.KEY_FLIGHT_NO, item.get(AdapterAllFlight.KEY_FLIGHT_NO));
+                    intentDetail.putExtra(AdapterAllFlight.KEY_CLASS, item.get(AdapterAllFlight.KEY_CLASS));
+                    intentDetail.putExtra(AdapterAllFlight.KEY_PRICE, item.get(AdapterAllFlight.KEY_PRICE));
+                    intentDetail.putExtra(AdapterAllFlight.KEY_DEPART, item.get(AdapterAllFlight.KEY_DEPART));
+                    intentDetail.putExtra(AdapterAllFlight.KEY_ARRIVE, item.get(AdapterAllFlight.KEY_ARRIVE));
+                    intentDetail.putExtra(AdapterAllFlight.KEY_LEAVE_RETURN, item.get(AdapterAllFlight.KEY_LEAVE_RETURN));
+                    intentDetail.putExtra(AdapterAllFlight.KEY_DETAIL, item.get(AdapterAllFlight.KEY_DETAIL));
 
-                intentDetail.putExtra(FragmentInternational.KEY_LEAVE_FROM, strLeaveFrom);
-                intentDetail.putExtra(FragmentInternational.KEY_GO_TO, strGoTo);
-                startActivity(intentDetail);
+                    intentDetail.putExtra(FragmentInternational.KEY_LEAVE_FROM, strLeaveFrom);
+                    intentDetail.putExtra(FragmentInternational.KEY_GO_TO, strGoTo);
+                    Log.d(TAG, "listView onCLick strLeaveFrom : " + strLeaveFrom + strGoTo);
+                    startActivity(intentDetail);
+                }
             }
         });
     }
@@ -201,7 +220,7 @@ public class FragmentAllFlight extends Fragment {
         AjaxCallback<JSONObject> cb = new AjaxCallback<JSONObject>() {
             @Override
             public void callback(String url, JSONObject json, AjaxStatus status) {
-//                    Log.d(TAG, "get detail  : " + json.toString().trim());
+//                Log.d(TAG, "get detail  : " + json.toString().trim());
                 if (json != null) {
                     try {
                         if (json.get(AdapterAllFlight.KEY_SUCCESS).toString().trim().equals("1")) {
@@ -230,10 +249,19 @@ public class FragmentAllFlight extends Fragment {
                             }
 //                            Log.d(TAG, "mListMapAll :" + mListMapAll.toString());
 
-                            AdapterAllFlight adapter = new AdapterAllFlight(getActivity(), mListMapAll, strLeaveFrom, strGoTo);
+                            adapter = new AdapterAllFlight(getActivity(), mListMapAll, strLeaveFrom, strGoTo);
                             lvFlight.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
-
+                            //set first Item
+                            if (mTwoPane)
+                                if (lvFlight.getSelectedItemPosition() == -1) {
+                                    HashMap<String, String> item = (HashMap<String, String>) lvFlight.getItemAtPosition(0);
+                                    item.put(FragmentInternational.KEY_LEAVE_FROM, strLeaveFrom);
+                                    item.put(FragmentInternational.KEY_GO_TO, strGoTo);
+                                    ((Callback) getActivity()).onItemSelected(
+                                            item, false
+                                    );
+                                }
                             layout.setVisibility(View.VISIBLE);
                         }
                     } catch (JSONException e) {
@@ -256,19 +284,9 @@ public class FragmentAllFlight extends Fragment {
         dialog.setCancelable(true);
         dialog.setInverseBackgroundForced(false);
         dialog.setCanceledOnTouchOutside(true);
-        dialog.setTitle(
+        dialog.setTitle(getResources().getString(R.string.searching));
 
-                getResources()
-
-                        .
-
-                                getString(R.string.searching)
-
-        );
-        aq.progress(pb).
-
-                ajax(url, JSONObject.class, cb);
-
+        aq.progress(pb).ajax(url, JSONObject.class, cb);
     }
 
     private void setToolBar() {
@@ -277,18 +295,27 @@ public class FragmentAllFlight extends Fragment {
             activity.setSupportActionBar(toolbar);
             activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             activity.getSupportActionBar().setHomeButtonEnabled(true);
-            if (strRoundType.trim().equals("0")) {
-                //Round Trip
-                toolbar.setTitle(mMapSearch.get(FragmentInternational.KEY_FULL_NAME_LEAVE) + ", " + mMapSearch.get(FragmentInternational.KEY_FULL_NAME_GO_TO) + ". Leave: " + strLeaveDate + ", Return: " + strReturnDate);
+            String title = "";
+            if (!mTwoPane) {
+                title = mMapSearch.get(FragmentInternational.KEY_FULL_NAME_LEAVE)
+                        + ", "
+                        + mMapSearch.get(FragmentInternational.KEY_FULL_NAME_GO_TO)
+                        + ". Leave: " + strLeaveDate;
             } else {
-                toolbar.setTitle(mMapSearch.get(FragmentInternational.KEY_FULL_NAME_LEAVE) + ", " + mMapSearch.get(FragmentInternational.KEY_FULL_NAME_GO_TO) + ". Leave: " + strLeaveDate);
+                title = strLeaveFrom + ", " + strGoTo + ". Leave: " + strLeaveDate;
             }
+            if (strRoundType.trim().equals("0")) {
+                title = title + ", Return: " + strReturnDate;
+            }
+            toolbar.setTitle(title);
         }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        if (menu != null)
+            menu.clear();
         inflater.inflate(R.menu.all_flight, menu);
     }
 

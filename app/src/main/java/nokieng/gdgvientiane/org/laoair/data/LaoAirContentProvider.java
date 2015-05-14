@@ -60,7 +60,7 @@ public class LaoAirContentProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Log.d(TAG, "Cursor Query Uri :" + uri);
         final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-        Cursor retCursor = null;
+        Cursor retCursor;
         String where = "";
         String table_name;
         switch (sUriMatcher.match(uri)) {
@@ -128,7 +128,6 @@ public class LaoAirContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues initialValues) {
 
-        Log.d(TAG, "insert Uri :" + uri);
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         long _id = -1;
@@ -137,7 +136,8 @@ public class LaoAirContentProvider extends ContentProvider {
             values = initialValues;
         else
             values = new ContentValues();
-        Uri returnUri = null;
+        Uri returnUri;
+        returnUri = null;
         switch (match) {
         /*    case CURRENCY_RATE_ITEM:
                 _id = db.insertWithOnConflict(KContact.CurrencyRate.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -168,7 +168,9 @@ public class LaoAirContentProvider extends ContentProvider {
                     isExists = historyTable.checkIfFlightExists(leaveFrom, goTo, leaveDate);
                 }
                 Log.d(TAG, "isExists :" + isExists);
+                //check this case, maybe access one data for many time, so let it check before insert
                 if (!isExists) {
+                    //if not exist insert it
                     _id = db.insertWithOnConflict(KContact.History.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 } else {
                     String where = KContact.History.COLUMN_LEAVE_FROM + " = '" + leaveFrom +

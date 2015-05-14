@@ -135,6 +135,7 @@ public class FragmentInternational extends Fragment {
         ADULTS = getResources().getStringArray(R.array.ADULTS);
         CHILDREN = getResources().getStringArray(R.array.CHILDREN);
         INFANT = getResources().getStringArray(R.array.INFANT);
+        GOING_TO = getResources().getStringArray(R.array.GOING_TO);
 
         rgRoundType = (RadioGroup) rootView.findViewById(R.id.rg_inter_way);
         rgClassType = (RadioGroup) rootView.findViewById(R.id.rg_inter_trip_type);
@@ -287,9 +288,13 @@ public class FragmentInternational extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        String strDepartDate = txtDepartureDate.getText().toString();
-        String strReturnDate = txtReturnDate.getText().toString();
+        String strDepartDate = "";
+        String strReturnDate = "";
+        //check those two view must not be null
+        if (txtDepartureDate != null && txtReturnDate != null) {
+            strDepartDate = txtDepartureDate.getText().toString();
+            strReturnDate = txtReturnDate.getText().toString();
+        }
 //        Log.d(TAG, "SAVE : " + strDepartDate + strReturnDate);
         outState.putCharSequence("txtInterDepart", strDepartDate);
         outState.putCharSequence("txtInterReturn", strReturnDate);

@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Spinner;
 
 import java.text.DateFormat;
@@ -159,24 +158,25 @@ public class Utilities {
             versionName = "Unavailable Version";
         }
         return versionName +
-                "\n \n" + (isFirstUsed ? "Preparing for first used..." : "");
+                "\n \n" + (isFirstUsed ? "Preparing for first use..." : "");
     }
 
     public String calPrice(String price) {
+        if (price == null)
+            return "-1";
         settingPre = PreferenceManager.getDefaultSharedPreferences(mContext);
         Cursor cursor;
-
+        float num = -1;
         String params = price.replaceAll("[a-zA-Z]", "").trim();
-        float num = Float.valueOf(params);
+         num= Float.valueOf(params);
         String unit = settingPre.getString(mContext.getString(R.string.KEY_CURRENCY), "USD");
-        Log.d(TAG, "unit : " + unit);
-        Log.d(TAG, "Price :" + num);
+/*        Log.d(TAG, "unit : " + unit);
+        Log.d(TAG, "Price :" + num);*/
         String strRate = "";
         assert unit != null;
         switch (unit) {
             case "USD":
                 strRate = String.valueOf(num);   //DEFAULT of currency is USD
-
                 break;
             case "EUR":
                 cursor = getExchangeRate(("USD" + unit).toUpperCase());
@@ -290,6 +290,8 @@ public class Utilities {
     }
 
     public String getCodeFullName(String code) {
+        if (code == null)
+            return "INVALID CODE";
         switch (code) {
             case "PNH":
                 return "Phnom Penh";
