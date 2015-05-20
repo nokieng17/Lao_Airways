@@ -2,6 +2,7 @@ package nokieng.gdgvientiane.org.laoair.Helper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +96,7 @@ public class AdapterAllFlight extends ArrayAdapter<HashMap<String, String>> {
         if (listAllItem.isEmpty()) {
             return -1;
         }
+        Log.d(TAG, "ADAPTER DATA : " + listAllItem.size());
         return listAllItem.size();
     }
 
@@ -107,6 +109,8 @@ public class AdapterAllFlight extends ArrayAdapter<HashMap<String, String>> {
     public long getItemId(int position) {
         return super.getItemId(position);
     }
+
+
 
 
 }

@@ -39,18 +39,21 @@ public class FragmentDetail extends Fragment {
 
     private static final String TAG = FragmentDetail.class.getSimpleName();
     private static final String KEY_ITEM = "ListViewItem";
+    private final static String KEY_ROTATE = "KEY_ROTATE";
     private static final String KEY_COMMAND_SAVE = "commandSave";
 
     private HashMap<String, String> item;
     private boolean mTwoPane = false;
+    private boolean isRotate = false;
 
     public FragmentDetail() {
     }
 
-    public static FragmentDetail newInstance(HashMap<String, String> item) {
+    public static FragmentDetail newInstance(HashMap<String, String> item, boolean isRotate) {
         FragmentDetail fragmentDetail = new FragmentDetail();
         Bundle arg = new Bundle();
         arg.putSerializable(KEY_ITEM, item);
+        arg.putBoolean(KEY_ROTATE, isRotate);
         fragmentDetail.setArguments(arg);
         return fragmentDetail;
     }
@@ -96,6 +99,7 @@ public class FragmentDetail extends Fragment {
 
         if (mTwoPane && getArguments() != null) {
             item = (HashMap<String, String>) getArguments().getSerializable(KEY_ITEM);
+            isRotate = getArguments().getBoolean(KEY_ROTATE);
             if (item != null) {
                 Log.d(TAG, "item should false" + item.isEmpty());
                 strDetail = item.get(AdapterAllFlight.KEY_DETAIL);
@@ -147,7 +151,8 @@ public class FragmentDetail extends Fragment {
 
         if (!isFromHistory) {
             //save history into database
-            saveHistory();
+            if (!isRotate)
+                saveHistory();
         }
 
         bodyShare = "Hi friends. I have share this to you, Because i have found this interesting trip. \n" +
@@ -232,6 +237,7 @@ public class FragmentDetail extends Fragment {
         values.put(KContact.History.COLUMN_LEAVE_RETURN, strLeaveReturn);
         values.put(KContact.History.COLUMN_DETAIL, newHtmlDetail);
         values.put(KContact.History.COLUMN_DATE_INSERT, System.currentTimeMillis());
+
         Uri uri = KContact.History.CONTENT_URI;
         Log.d(TAG, "strLeaveFrom : " + strLeaveFrom);
         Log.d(TAG, "ContentValues : " + values.get(KContact.History.COLUMN_LEAVE_FROM));

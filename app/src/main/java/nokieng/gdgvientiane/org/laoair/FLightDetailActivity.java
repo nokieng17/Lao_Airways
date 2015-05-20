@@ -12,7 +12,7 @@ public class FLightDetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_flight_detail);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_flight_detail, FragmentDetail.newInstance(null))
+                    .add(R.id.fragment_flight_detail, FragmentDetail.newInstance(null, false))
                     .commit();
         }
     }

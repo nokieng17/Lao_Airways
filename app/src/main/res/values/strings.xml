@@ -20,7 +20,7 @@
     <string name="invalid_date">Invalid date!</string>
     <string name="invalid_date_past_date">Date less than now</string>
     <string name="invalid_date_less_than">Date must be greater</string>
-    <string name="title_activity_all_flight">AllFlightActivity</string>
+    <string name="title_activity_all_flight">Available Flight</string>
     <string name="searching">Searching . . .</string>
     <string name="title_activity_flight_detail">Detail</string>
     <string name="spn_adult">-- Adult --</string>

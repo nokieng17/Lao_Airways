@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -88,7 +87,7 @@ public class FragmentInternational extends Fragment {
     private Spinner spnLeaveFrom, spnGoTo, spnAdults, spnChild, spnInfant;
     private TextView txtDepartureDate, txtReturnDate;
     private Button btnSearch;
-    private LinearLayout layoutDateTo;
+    private LinearLayout layoutDateTo, layoutDateFrom;
 
     private String strDesCode = "";
     //    private String strSuccess = "";
@@ -102,9 +101,6 @@ public class FragmentInternational extends Fragment {
 //    private String strChild = "";
 //    private String strInfants = "";
 
-    private int intYears;
-    private int intMonth;
-    private int intDay;
 
     private ArrayAdapter<String> adapterLeaveFrom;
     private ArrayAdapter<String> adapterGoTo;
@@ -117,10 +113,6 @@ public class FragmentInternational extends Fragment {
 
     //    private Context dialogContext = null;
     private boolean isRestore = false;
-
-/*    public FragmentInternational() {
-        dialogContext = getActivity();
-    }*/
 
 
     @Override
@@ -154,6 +146,8 @@ public class FragmentInternational extends Fragment {
 
         txtDepartureDate = (TextView) rootView.findViewById(R.id.txt_inter_date_from);
         txtReturnDate = (TextView) rootView.findViewById(R.id.txt_inter_date_to);
+
+        layoutDateFrom = (LinearLayout) rootView.findViewById(R.id.layout_inter_date_from);
         layoutDateTo = (LinearLayout) rootView.findViewById(R.id.layout_inter_date_to);
 
         btnSearch = (Button) rootView.findViewById(R.id.btn_inter_search);
@@ -224,27 +218,56 @@ public class FragmentInternational extends Fragment {
     public void onResume() {
         super.onResume();
 
-        final Calendar calendar = Calendar.getInstance();
-        intDay = calendar.get(Calendar.DAY_OF_MONTH);
-        intMonth = calendar.get(Calendar.MONTH) + 1;
-        intYears = calendar.get(Calendar.YEAR);
-
-
         isRestore = false;
 
 
-        txtDepartureDate.setOnClickListener(new View.OnClickListener() {
+        layoutDateFrom.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {/*
                 txtDepartureDate.setError(null);
-                showDatePickerDialog(intYears, intMonth, intDay, mSelectDateFrom);
+                showDatePickerDialog(intYears, intMonth, intDay, mSelectDateFrom);*/
+                final Calendar c = Calendar.getInstance();
+                int intDay = c.get(Calendar.DAY_OF_MONTH);
+                int intMonth = c.get(Calendar.MONTH);
+                int intYears = c.get(Calendar.YEAR);
+
+                DatePickerDialog dpd = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        txtDepartureDate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                        txtReturnDate.setText(year + "-" + (monthOfYear + 1) + "-" + (dayOfMonth + 7));
+                    }
+                }, intYears, intMonth, intDay);
+                //get date picker instance from datePickerDialog
+                DatePicker dp = dpd.getDatePicker();
+                //set the DatePicker minimum date selection to current date
+                dp.setMinDate(c.getTimeInMillis());
+                //dp.setMinDate(System.currentTimeMillis() - 1000); alternate way to get current day
+                //add One year
+                c.add(Calendar.YEAR, 1);
+                //set Maximum day with range one year
+                dp.setMaxDate(c.getTimeInMillis());
+                dpd.show();
             }
         });
-        txtReturnDate.setOnClickListener(new View.OnClickListener() {
+
+
+        layoutDateTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 txtReturnDate.setError(null);
-                showDatePickerDialog(intYears, intMonth, intDay, mSelectDateTo);
+                final Calendar c = Calendar.getInstance();
+                DatePickerDialog dpd = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        txtReturnDate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                    }
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                DatePicker dp = dpd.getDatePicker();
+                dp.setMinDate(utilities.convert_yyyy_MM_dd_ToMillis(txtDepartureDate.getText().toString()));
+                /// 3.156e+10 == 1 year in milliSecond
+                dp.setMaxDate((long) (utilities.convert_yyyy_MM_dd_ToMillis(txtDepartureDate.getText().toString()) + 3.156e+10));
+                dpd.show();
             }
         });
 
@@ -338,7 +361,7 @@ public class FragmentInternational extends Fragment {
         if (!strReturn.equals("")) {
             txtReturnDate.setText(strReturn);
         } else {
-            txtReturnDate.setText(String.valueOf(mCalendar.get(Calendar.YEAR) + "-" + (mCalendar.get(Calendar.MONTH) + 1) + "-" + mCalendar.get(Calendar.DAY_OF_MONTH)));
+            txtReturnDate.setText(String.valueOf(mCalendar.get(Calendar.YEAR) + "-" + (mCalendar.get(Calendar.MONTH) + 1) + "-" + (mCalendar.get(Calendar.DAY_OF_MONTH) + 7)));
         }
     }
 
@@ -351,15 +374,23 @@ public class FragmentInternational extends Fragment {
         } else if (spnGoTo.getSelectedItem().equals("-- Loading --")) {
             Toast.makeText(getActivity().getApplicationContext(), "Getting destination...", Toast.LENGTH_SHORT).show();
             isCancel = true;
-        } else if (utilities.isCurrentDate(txtDepartureDate.getText().toString())) {
+        }/*
+         do not have to check if the current date
+        else if (!utilities.isCurrentDate(txtDepartureDate.getText().toString())) {
             Toast.makeText(getActivity().getApplicationContext(), "Select Current date", Toast.LENGTH_SHORT).show();
             isCancel = true;
-        } else if (rbRoundTrip.isChecked()) {
+        }*/ /*else if (rbRoundTrip.isChecked()) {
             if (!Utilities.isDateAfter(txtDepartureDate.getText().toString(), txtReturnDate.getText().toString())) {
                 Toast.makeText(getActivity().getApplicationContext(), "Invalid return date", Toast.LENGTH_SHORT).show();
                 isCancel = true;
             }
-        }
+        }*/
+
+        Log.d(TAG, "CURRENT DATE : " + utilities.isCurrentDate(txtDepartureDate.getText().toString()));
+        Log.d(TAG, "CURRENT DATE : " + txtDepartureDate.getText().toString());
+
+        Log.d(TAG, "DATE : " + txtDepartureDate.getText().toString());
+        Log.d(TAG, "IS AFTER DATE " + !Utilities.isDateAfter(txtDepartureDate.getText().toString(), txtReturnDate.getText().toString()));
 
         if (!isCancel) {
             int position = spnGoTo.getSelectedItemPosition();
@@ -478,38 +509,4 @@ public class FragmentInternational extends Fragment {
         spnGoTo.setAdapter(adapterGoTo);
         adapterGoTo.notifyDataSetChanged();
     }
-
-
-    private DatePickerDialog showDatePickerDialog(int initialYear, int initialMonth, int initialDay, DatePickerDialog.OnDateSetListener listener) {
-        DatePickerDialog dialog = new DatePickerDialog(getActivity().getBaseContext(), listener, initialYear, initialMonth, initialDay);
-        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT); //to avoid this : Unable to add window -- token null is not for an application
-        dialog.show();
-        return dialog;
-    }
-
-    // CallBacks for date pickers
-    private DatePickerDialog.OnDateSetListener mSelectDateFrom = new DatePickerDialog.OnDateSetListener() {
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            intDay = dayOfMonth;
-            intMonth = monthOfYear + 1;
-            intYears = year;
-
-            txtDepartureDate.setText(intYears + "-" + intMonth + "-" + intDay);
-        }
-    };
-    // CallBacks for date pickers
-    private DatePickerDialog.OnDateSetListener mSelectDateTo = new DatePickerDialog.OnDateSetListener() {
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            intDay = dayOfMonth;
-            intMonth = monthOfYear + 1;
-            intYears = year;
-
-            txtReturnDate.setText(intYears + "-" + intMonth + "-" + intDay);
-        }
-    };
-
 }

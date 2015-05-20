@@ -15,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -69,12 +68,14 @@ public class FragmentAllFlight extends Fragment {
     private SharedPreferences sharedPreferences;
 
     private ArrayList<HashMap<String, String>> mListMapAll = new ArrayList<>();
+    private int listViewPosition = ListView.INVALID_POSITION;
+    private final static String KEY_LIST_VIEW_POSITION = "KEY_LIST_VIEW_POSITION";
     //    private Vector<ContentValues> vValues;
     private static final int ALL_FLIGHT_LOADER = 12;
     private boolean mTwoPane = false;
 
     public interface Callback {
-        public void onItemSelected(HashMap<String, String> items, boolean isClick);
+        public void onItemSelected(HashMap<String, String> items, boolean isClick, boolean isRotate);
     }
 
     public static FragmentAllFlight newInstance() {
@@ -114,7 +115,7 @@ public class FragmentAllFlight extends Fragment {
 
         txtHeader = (TextView) rootView.findViewById(R.id.txt_all_flight_header);
         lvFlight = (ListView) rootView.findViewById(R.id.lv_all_flight);
-        lvFlight.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        lvFlight.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
 
         sharedPreferences = getActivity().getSharedPreferences("AllFLight", 0x0000);        //0x0000 is MODE_PRIVATE or 0
@@ -159,12 +160,6 @@ public class FragmentAllFlight extends Fragment {
             }, 1000);
         }
 
-        return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
 
         if (adapter == null)
             aqGetDestination(strLeaveFrom, strGoTo, strClassType, strRoundType);
@@ -183,7 +178,7 @@ public class FragmentAllFlight extends Fragment {
                 item.put(FragmentInternational.KEY_GO_TO, strGoTo);
                 if (mTwoPane) {
                     ((Callback) getActivity()).onItemSelected(
-                            item, true
+                            item, true, false
                     );
                 } else {
                     Intent intentDetail = new Intent(getActivity(), FLightDetailActivity.class);
@@ -200,8 +195,37 @@ public class FragmentAllFlight extends Fragment {
                     Log.d(TAG, "listView onCLick strLeaveFrom : " + strLeaveFrom + strGoTo);
                     startActivity(intentDetail);
                 }
+                listViewPosition = position;
             }
         });
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_LIST_VIEW_POSITION)) {
+            listViewPosition = savedInstanceState.getInt(KEY_LIST_VIEW_POSITION);
+            Log.d(TAG, "GET LIST POSITION FROM SAVE BUNDLE : " + listViewPosition);
+        }
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (lvFlight != null && listViewPosition != ListView.INVALID_POSITION) {
+            Log.d(TAG, "SELECT SMOOTH SCROLL AT : " + listViewPosition);
+            lvFlight.post(new Runnable() {
+                @Override
+                public void run() {
+                    lvFlight.setItemChecked(listViewPosition, true);
+                    HashMap<String, String> item = (HashMap<String, String>) lvFlight.getItemAtPosition(listViewPosition);
+                    if (mTwoPane) {
+                        ((Callback) getActivity()).onItemSelected(
+                                item, true, true
+                        );
+                    }//item HasMap, isClick, isRotate (if otate do not have to save any data
+                }
+            });
+        }
     }
 
     @Override
@@ -211,6 +235,9 @@ public class FragmentAllFlight extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        if (listViewPosition != ListView.INVALID_POSITION) {
+            outState.putInt(KEY_LIST_VIEW_POSITION, listViewPosition);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -220,7 +247,7 @@ public class FragmentAllFlight extends Fragment {
         AjaxCallback<JSONObject> cb = new AjaxCallback<JSONObject>() {
             @Override
             public void callback(String url, JSONObject json, AjaxStatus status) {
-//                Log.d(TAG, "get detail  : " + json.toString().trim());
+                Log.d(TAG, "get detail aquery ");
                 if (json != null) {
                     try {
                         if (json.get(AdapterAllFlight.KEY_SUCCESS).toString().trim().equals("1")) {
@@ -252,6 +279,9 @@ public class FragmentAllFlight extends Fragment {
                             adapter = new AdapterAllFlight(getActivity(), mListMapAll, strLeaveFrom, strGoTo);
                             lvFlight.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
+
+                            lvFlight.requestFocus();
+                            lvFlight.smoothScrollToPosition(listViewPosition);
                             //set first Item
                             if (mTwoPane)
                                 if (lvFlight.getSelectedItemPosition() == -1) {
@@ -259,7 +289,7 @@ public class FragmentAllFlight extends Fragment {
                                     item.put(FragmentInternational.KEY_LEAVE_FROM, strLeaveFrom);
                                     item.put(FragmentInternational.KEY_GO_TO, strGoTo);
                                     ((Callback) getActivity()).onItemSelected(
-                                            item, false
+                                            item, false, false
                                     );
                                 }
                             layout.setVisibility(View.VISIBLE);

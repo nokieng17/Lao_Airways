@@ -92,6 +92,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/layout_domestic_date_from"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dp5"
@@ -127,6 +128,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/layout_domestic_date_to"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dp5"
@@ -136,8 +138,7 @@
                         android:background="@drawable/shape_line"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingLeft="@dimen/dp5"
-                        android:id="@+id/layout_domestic_date_to">
+                        android:paddingLeft="@dimen/dp5">
 
                         <TextView
                             android:id="@+id/txt_domestic_date_to"

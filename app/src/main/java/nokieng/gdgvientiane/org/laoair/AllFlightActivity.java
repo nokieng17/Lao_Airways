@@ -36,7 +36,7 @@ public class AllFlightActivity extends ActionBarActivity implements FragmentAllF
             mTwoPane = true;
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_flight_detail, FragmentDetail.newInstance(mMapSearch), DETAILFRAGMENT_TAG)
+                        .replace(R.id.fragment_flight_detail, FragmentDetail.newInstance(mMapSearch, false), DETAILFRAGMENT_TAG)
                         .commit();
             }
         } else {
@@ -57,11 +57,11 @@ public class AllFlightActivity extends ActionBarActivity implements FragmentAllF
     }
 
     @Override
-    public void onItemSelected(HashMap<String, String> items, boolean isClick) {
+    public void onItemSelected(HashMap<String, String> items, boolean isClick, boolean isRotate) {
         if (mTwoPane) {
             Log.d(TAG, "all fligh str leave from : " + items.get(FragmentInternational.KEY_LEAVE_FROM));
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_flight_detail, FragmentDetail.newInstance(items))
+                    .replace(R.id.fragment_flight_detail, FragmentDetail.newInstance(items, isRotate))
                     .commit();
         } else {
             if (isClick) {
